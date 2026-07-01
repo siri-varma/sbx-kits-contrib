@@ -147,6 +147,23 @@ The allowlist is deliberately minimal so reviewers can see the exact egress
 contract. If your agent calls additional services (other model providers, MCP
 servers, arbitrary websites), allow those domains explicitly.
 
+## Smoke test
+
+After creating a sandbox with this kit, run:
+
+```console
+agent@sandbox:~$ bash scripts/smoke-test.sh
+```
+
+When using a remote git kit, clone this repo or mount the `open-interpreter`
+directory as the workspace if you want the smoke-test script available inside
+the sandbox:
+
+```console
+$ cd open-interpreter
+$ sbx run shell --kit ./ .
+```
+
 ## Bumping the version
 
 To update the kit, change `OI_VERSION` in `spec.yaml`, run the TCK, and verify

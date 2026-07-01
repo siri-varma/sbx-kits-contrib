@@ -34,12 +34,12 @@ caps:
       - "pypi.org:443"
       - "files.pythonhosted.org:443"
       # OpenAI runtime endpoint used by the default gpt-4o model.
-      - "api.openai.com"
+      - "api.openai.com:443"
       # OpenRouter gateway used by `interpreter --model openrouter/...`.
-      - "openrouter.ai"
+      - "openrouter.ai:443"
       # tiktoken downloads its BPE encoding files (e.g. o200k_base for gpt-4o)
       # from here the first time LiteLLM/Open Interpreter counts tokens.
-      - "openaipublic.blob.core.windows.net"
+      - "openaipublic.blob.core.windows.net:443"
       # `apt-get update` refreshes every configured apt source from the base
       # template. Keep all template sources allowed for amd64 and arm64 sandboxes.
       - "archive.ubuntu.com:80"
@@ -79,7 +79,10 @@ commands:
         # package imports. LITELLM_LOCAL_MODEL_COST_MAP keeps the import offline.
         export LITELLM_LOCAL_MODEL_COST_MAP=True
         interpreter --help >/dev/null
-        open-interpreter-python -c 'import interpreter; print("open-interpreter OK")'
+        open-interpreter-python -c 'import interpreter, importlib.metadata; print("open-interpreter", importlib.metadata.version("open-interpreter"))'
+        # Hand the venv to the runtime agent user so it can write bytecode
+        # caches and any user-installed packages at runtime.
+        chown -R 1000:1000 /opt/open-interpreter
       user: "0"
       description: "Install Open Interpreter v0.4.2 into /opt/open-interpreter"
     - command: |
